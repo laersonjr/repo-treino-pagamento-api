@@ -26,12 +26,23 @@
 						<th class="text-center col-md-2">Data de Vencimento</th>
 						<th class="text-right col-md-2">Valor</th>
 						<th class="text-center col-md-2">Status</th>
-						<th class=col-md-1></th>
+						<th class="col-md-1"></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td colspan="6">Nenhum título foi encontrado</td>
+					<tr th:each="titulo : ${titulos}">
+						<td class="text-center" th:text="${titulo.codigo}"></td>
+						<td th:text="${titulo.descricao}"></td>
+						<td class="text-center" th:text="${{titulo.dataVencimento}}"></td>
+						<td class="text-right" th:text="|R$ ${{titulo.valor}}|"></td>
+						<td class="text-center">
+							<span class="label" th:text="${titulo.status.descricao}"
+								th:classappend="${#strings.toString(titulo.status) == 'PENDENTE' ? 'label-danger' : '	label-success'}"></span>
+						</td>
+						<td class="col-md-1"> </td>
+					</tr>
+ 					<tr>
+						<td colspan="6" th:if="${#lists.isEmpty(titulos)}">Nenhum título foi encontrado</td>
 					</tr>
 				</tbody>
 			</table>
