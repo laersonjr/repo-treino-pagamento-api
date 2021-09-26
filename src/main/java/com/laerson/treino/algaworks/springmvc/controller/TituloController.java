@@ -21,11 +21,11 @@ import com.laerson.treino.algaworks.springmvc.repository.TituloRepository;
 @Controller
 @RequestMapping("/titulos")
 public class TituloController {
-
-	@Autowired
-	private TituloRepository tituloRepository;
 	
 	private static final String CADASTRO_VIEW = "CadastroTitulo";
+	
+	@Autowired
+	private TituloRepository tituloRepository;
 
 	@RequestMapping("/novo")
 	public ModelAndView novo() {
@@ -37,12 +37,12 @@ public class TituloController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String salvar(@Validated Titulo titulo, Errors errors, RedirectAttributes attributes) {
 		if (errors.hasErrors()) {
-			return "CADASTRO_VIEW";
+			return CADASTRO_VIEW;
 		}
-
+		
 		tituloRepository.save(titulo);
 		attributes.addFlashAttribute("mensagem", "Título salvo com sucesso!");
-		return "redirect:/titulos/novo";
+		return "redirect:/titulos/novo"; 
 	}
 
 //	@RequestMapping(method = RequestMethod.POST)
@@ -58,10 +58,9 @@ public class TituloController {
 //		return mv;
 //	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping
 	public ModelAndView pesquisar() {
 		List<Titulo> todosTitulos = tituloRepository.findAll();
-
 		ModelAndView mv = new ModelAndView("PesquisaTitulos");
 		mv.addObject("titulos", todosTitulos);
 		return mv;
@@ -75,6 +74,14 @@ public class TituloController {
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW); 
 		mv.addObject(titulo);
 		return mv;
+	}
+	
+	@RequestMapping(value="{codigo}", method = RequestMethod.DELETE)
+	public String excluir(@PathVariable Long codigo, RedirectAttributes attributes) {
+		tituloRepository.deleteById(codigo);
+		
+		attributes.addFlashAttribute("mensagem", "Título excluído com sucesso!");
+		return "redirect:/titulos";
 	}
 
 	@ModelAttribute("todosStatusTitulo")
