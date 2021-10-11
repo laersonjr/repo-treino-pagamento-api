@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.laerson.treino.algaworks.springmvc.model.StatusTitulo;
 import com.laerson.treino.algaworks.springmvc.model.Titulo;
 import com.laerson.treino.algaworks.springmvc.repository.TituloRepository;
+import com.laerson.treino.algaworks.springmvc.repository.filter.TituloFilter;
 import com.laerson.treino.algaworks.springmvc.service.CadastroTituloService;
 
 @Controller
@@ -68,8 +69,9 @@ public class TituloController {
 //	}
 
 	@RequestMapping
-	public ModelAndView pesquisar() {
-		List<Titulo> todosTitulos = tituloRepository.findAll();
+	public ModelAndView pesquisar(@ModelAttribute("filtro") TituloFilter filtro) {
+		List<Titulo> todosTitulos = cadastroTituloService.filtrar(filtro);
+		
 		ModelAndView mv = new ModelAndView("PesquisaTitulos");
 		mv.addObject("titulos", todosTitulos);
 		return mv;
